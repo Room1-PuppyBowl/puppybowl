@@ -86,7 +86,6 @@ const renderAllPlayers = (playerList) => {
 
       const deleteButton = partyElement.querySelector('.delete-button');
       deleteButton.addEventListener('click', async (event) => {
-        event.preventDefault();
         removePlayer(result.playerId);
 */
 

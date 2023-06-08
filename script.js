@@ -14,7 +14,7 @@ const fetchAllPlayers = async () => {
     try {
         const response = await fetch(APIURL);
         const players = await response.json();
-        console.log(players)
+        console.log("PLAYERS:",players)
         return players;
     } catch (err) {
         console.error('Uh oh, trouble fetching players!', err);
@@ -71,53 +71,82 @@ const removePlayer = async (playerId) => {
  * @param playerList - an array of player objects
  * @returns the playerContainerHTML variable.
  */
-const renderAllPlayers = (playerList) => {
+
+const renderSinglePlayerById = async (id) => {
     try {
-        
-    } catch (err) {
-        console.error('Uh oh, trouble rendering players!', err);
-    }
-};
-// const renderSinglePlayerById = async (id) => {
-//     try {
-//     const player = await fetchSinglePlayer(id);
-//     console.log(player)
-//     const playerDetailsElement = document.createElement('div');
-//     playerDetailsElement.classList.add('player-details');
-//     playerDetailsElement.innerHTML = `
-//             <h2>${player.name}</h2>
-//             <p>${player.breed}</p>
-//             <p>${player.status}</p>
-//             <img>${player.imageUrl}</img>
-//             <h3>team:</h3>
-//             <ul>
-//             ${team
-//               .map(
-//                 (team, index) => `
-//               <li>
-//                 <div>${team.name}</div>
-                
-//               </li>
-//             `
-//               )
-//               .join('')}
-//           </ul>
+    const players = await fetchSinglePlayer(id);
+    console.log(players)
+    const playerDetailsElement = document.createElement('div');
+    playerDetailsElement.classList.add('player-details');
+    playerDetailsElement.innerHTML = `
+            <h2>${players.name}</h2>
+            <p>${players.breed}</p>
+            <p>${players.status}</p>
+            <img>${players.imageUrl}</img>
+            <h3>team:</h3>
+            <ul>
+            ${team
+              .map(
+                (team, index) => `
+              <li>
+                <div>${players.team.name}</div>
+              </li>
+            `
+              )
+              .join('')}
+          </ul>
           
 
 
-//             <button class="close-button">Close</button>
-//         `;
-//     playerContainer.appendChild(playerDetailsElement);
+            <button class="close-button">Close</button>
+        `;
+    playerContainer.appendChild(playerDetailsElement);
 
-//     // add event listener to close button
-//     const closeButton = playerDetailsElement.querySelector('.close-button');
-//     closeButton.addEventListener('click', () => {
-//       playerDetailsElement.remove();
-//     });
-//     } catch (error) {
-//     console.error(error);
-//   }
-// }
+    // add event listener to close button
+    const closeButton = playerDetailsElement.querySelector('.close-button');
+    closeButton.addEventListener('click', () => {
+      playerDetailsElement.remove();
+    });
+    } catch (error) {
+    console.error(error);
+  }
+}
+
+const renderAllPlayers = async (players) => {
+    try {
+           playerContainer.innerHTML = '';
+           console.log("Render players:", players)
+           players.data.players.forEach((player) => {
+             const playerElement = document.createElement('div');
+             playerElement.classList.add('player');
+             playerElement.innerHTML = `
+                       <h2>${player.name}</h2>
+                       <p>${player.breed}</p>
+                       <p>${player.status}</p>
+                       <img src="${player.imageUrl}" alt="${player.name}" width="200">
+                       <button class="details-button" data-id="${player.id}">See Details</button>
+                       <button class="delete-button" data-id="${player.id}">Delete</button>
+                   `;
+             playerContainer.appendChild(playerElement);
+       
+             // see details
+             const detailsButton = playerElement.querySelector('.details-button');
+             detailsButton.addEventListener('click', async (event) => {
+               const playerId = event.target.dataset.id;
+               await renderSinglePlayerById(playerId);
+             })
+             // delete party
+             const deleteButton = playerElement.querySelector('.delete-button');
+             deleteButton.addEventListener('click', async (event) => {
+               const playerId = event.target.dataset.id;
+               await removePlayer(playerId);
+             });
+           });
+       
+   } catch (err) {
+       console.error('Uh oh, trouble rendering players!', err);
+   }
+};
 /**
  * It renders a form to the DOM, and when the form is submitted, it adds a new player to the database,
  * fetches all players from the database, and renders them to the DOM.
@@ -132,8 +161,9 @@ const renderNewPlayerForm = () => {
 
 const init = async () => {
     const players = await fetchAllPlayers();
+    console.log("player:", players)
     renderAllPlayers(players);
-    renderNewPlayerForm();
+    // renderNewPlayerForm();
 }
 
 init();

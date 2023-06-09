@@ -29,7 +29,6 @@ const fetchSinglePlayer = async (playerId) => {
     }
 };
 
-
 const addNewPlayer = async (playerObj) => {
     try {
         const response = await fetch(APIURL + 'players', {
@@ -43,45 +42,6 @@ const addNewPlayer = async (playerObj) => {
         console.error('Oops, something went wrong with adding that player!', err);
     }
 };
-
-let lastDeletedPlayer = null;
-
-const removePlayer = async (playerId) => {
-    try {
-        console.log(`Trying to remove player with ID ${playerId}`);
-        // Before deleting, store the player details in case we need to re-add them
-        const playerDetails = await fetchSinglePlayer(playerId);
-
-        await fetch(`${APIURL}${playerId}`, {
-            method: 'DELETE',
-        });
-
-        // Store the details of the deleted player
-        lastDeletedPlayer = playerDetails;
-        
-        // Refresh the player list
-        renderAllPlayers();
-
-    } catch (err) {
-        console.error(
-            `Whoops, trouble removing player #${playerId} from the roster!`,
-            err
-        );
-    }
-};
-
-const reAddLastDeletedPlayer = async () => {
-    if (lastDeletedPlayer) {
-        await addNewPlayer(lastDeletedPlayer);
-        // Clear lastDeletedPlayer variable
-        lastDeletedPlayer = null;
-        // Refresh the player list
-        renderAllPlayers();
-    } else {
-        console.log("No player to re-add");
-    }
-};
-
 
 const renderAllPlayers = async () => {
     try {

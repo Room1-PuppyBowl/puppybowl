@@ -6,7 +6,7 @@ const newPlayerFormContainer = document.getElementById('form-container');
 
 const cohortName = '2302-ACC-CTWEB-PT-B';
 // Use the APIURL variable for fetch requests
-const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/players`;
+const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/players/`;
 
 const fetchAllPlayers = async () => {
     try {
@@ -20,13 +20,15 @@ const fetchAllPlayers = async () => {
 
 const fetchSinglePlayer = async (playerId) => {
     try {
-        const response = await fetch(APIURL + 'players/' + playerId);
+        const response = await fetch(`${APIURL}${playerId}`);
         const player = await response.json();
+        console.log(player); // Log the player data to see its structure
         return player;
     } catch (err) {
         console.error(`Oh no, trouble fetching player #${playerId}!`, err);
     }
 };
+
 
 const addNewPlayer = async (playerObj) => {
     try {
@@ -42,11 +44,24 @@ const addNewPlayer = async (playerObj) => {
     }
 };
 
+let lastDeletedPlayer = null;
+
 const removePlayer = async (playerId) => {
     try {
-        await fetch(APIURL + 'players/' + playerId, {
+        console.log(`Trying to remove player with ID ${playerId}`);
+        // Before deleting, store the player details in case we need to re-add them
+        const playerDetails = await fetchSinglePlayer(playerId);
+
+        await fetch(`${APIURL}${playerId}`, {
             method: 'DELETE',
         });
+
+        // Store the details of the deleted player
+        lastDeletedPlayer = playerDetails;
+        
+        // Refresh the player list
+        renderAllPlayers();
+
     } catch (err) {
         console.error(
             `Whoops, trouble removing player #${playerId} from the roster!`,
@@ -54,6 +69,19 @@ const removePlayer = async (playerId) => {
         );
     }
 };
+
+const reAddLastDeletedPlayer = async () => {
+    if (lastDeletedPlayer) {
+        await addNewPlayer(lastDeletedPlayer);
+        // Clear lastDeletedPlayer variable
+        lastDeletedPlayer = null;
+        // Refresh the player list
+        renderAllPlayers();
+    } else {
+        console.log("No player to re-add");
+    }
+};
+
 
 const renderAllPlayers = async () => {
     try {
@@ -64,16 +92,35 @@ const renderAllPlayers = async () => {
             <div class="card">
                 <img src="${player.imageUrl}" alt="${player.name}" width="200">
                 <p>Name: ${player.name}</p>
-                <p>Breed: ${player.breed}</p>
-                <p>Status: ${player.status}</p>
-                <button onclick="fetchSinglePlayer(${player.id})">See details</button>
-                <button onclick="removePlayer(${player.id})">Remove from roster</button>
+                <button onclick="displayPlayerDetails(${player.id})">See details</button>
+                <button onclick="removePlayer(${player.id}, ${JSON.stringify(player)})">Remove from roster</button>
             </div>`;
         });
         playerContainer.innerHTML = playerContainerHTML;
     } catch (err) {
         console.error('Uh oh, trouble rendering players!', err);
     }
+};
+
+
+const displayPlayerDetails = async (playerId) => {
+    try {
+        const player = await fetchSinglePlayer(playerId);
+        const smolContent = document.getElementById('player-details');
+        let playerDetailsHTML = `
+        <img src="${player.data.player.imageUrl}" alt="${player.data.player.name}" width="200">
+        <p>Name: ${player.data.player.name}</p>
+        <p>Breed: ${player.data.player.breed}</p>
+        <p>Status: ${player.data.player.status}</p>`;
+        smolContent.innerHTML = playerDetailsHTML;
+        document.getElementById('player-smol').style.display = "block";
+    } catch (err) {
+        console.error(`Uh oh, trouble fetching and displaying player #${playerId} details!`, err);
+    }
+};
+
+const closeSmol = () => {
+    document.getElementById('player-smol').style.display = "none";
 };
 
 

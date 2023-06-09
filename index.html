@@ -14,9 +14,20 @@
     <div id="form-container">
         <!-- The form will be appended here by JavaScript -->
     </div>
+    <div id="readd-button-container">
+        <!-- The re-add button will be here -->
+        <button onclick="reAddLastDeletedPlayer()">Re-add last deleted player</button>
+    </div>
     <div id="roster-container">
         <!-- The roster will be appended here by JavaScript -->
     </div>
-    <script type="module" src="main.js"></script>
+    <div id="player-smol" class="smol">
+        <div class="smol-content">
+            <span class="close-button" onclick="closeSmol()">&times;</span>
+            <div id="player-details"></div>
+        </div>
+    </div>
+    
+    <script type="module" src="script.js"></script>
 </body>
 </html>

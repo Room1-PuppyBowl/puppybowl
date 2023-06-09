@@ -89,7 +89,8 @@ const renderNewPlayerForm = () => {
         newPlayerFormContainer.innerHTML = `
             <form id="newPlayerForm">
                 <input type="text" name="name" placeholder="Name" required>
-                <input type="number" name="age" placeholder="Age" required>
+                <input type="text" name="breed" placeholder="Breed" required>
+                <input type="text" name="status" placeholder="Status" required>
                 <button type="submit">Add Player</button>
             </form>`;
         document.getElementById('newPlayerForm').addEventListener('submit', async (e) => {

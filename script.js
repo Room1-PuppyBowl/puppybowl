@@ -51,7 +51,7 @@ const renderAllPlayers = async () => {
             playerContainerHTML += `
             <div class="card">
                 <img src="${player.imageUrl}" alt="${player.name}" width="200">
-                <p>Name: ${player.name}</p>
+                <p>${player.name}</p>
                 <button onclick="displayPlayerDetails(${player.id})">See details</button>
                 <button onclick="removePlayer(${player.id}, ${JSON.stringify(player)})">Remove from roster</button>
             </div>`;

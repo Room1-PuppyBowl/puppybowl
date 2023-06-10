@@ -8,6 +8,7 @@ const cohortName = '2302-ACC-CTWEB-PT-X';
 // Use the APIURL variable for fetch requests
 const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/players/`;
 
+//function to fetch all players from api
 const fetchAllPlayers = async () => {
     try {
         const response = await fetch(APIURL);
@@ -18,18 +19,19 @@ const fetchAllPlayers = async () => {
     }
 };
 
+//function to fetch a single player from the api by its id
 const fetchSinglePlayer = async (playerId) => {
     try {
         const response = await fetch(`${APIURL}${playerId}`);
         const player = await response.json();
-        console.log(player); // Log the player data to see its structure
+        console.log(player);
         return player;
     } catch (err) {
         console.error(`Oh no, trouble fetching player #${playerId}!`, err);
     }
 };
 
-
+//function to add a new player using the api
 const addNewPlayer = async (playerObj) => {
     try {
         const response = await fetch(APIURL, {
@@ -53,12 +55,13 @@ const addNewPlayer = async (playerObj) => {
     }
 };
 
+//function to remove a player via the api
 const removePlayer = async (playerId) => {
     try {
         const response = await fetch(`${APIURL}${playerId}`, {
             method: 'DELETE',
         });
-
+        // if response is good, re-renders the players
         if (response.ok) {
             renderAllPlayers();
         } else {
@@ -69,10 +72,12 @@ const removePlayer = async (playerId) => {
     }
 };
 
+//function to render all players to the dom
 const renderAllPlayers = async () => {
     try {
         const players = await fetchAllPlayers();
         let playerContainerHTML = '';
+        // loop through all players and create a new div for each
         players.data.players.forEach(player => {
             playerContainerHTML += `
             <div class="card">
@@ -88,10 +93,12 @@ const renderAllPlayers = async () => {
     }
 };
 
+// function to display details of a player
 const displayPlayerDetails = async (playerId) => {
     try {
         const player = await fetchSinglePlayer(playerId);
         const smolContent = document.getElementById('player-details');
+        // two divs for image and info to fix media screen scaling issues and display player details
         let playerDetailsHTML = `
         <div class="player-image">
             <img src="${player.data.player.imageUrl}" alt="${player.data.player.name}" width="200">
@@ -108,11 +115,12 @@ const displayPlayerDetails = async (playerId) => {
     }
 };
 
+// to close the see player details view by hiding the container
 const closeSmol = () => {
     document.getElementById('player-smol').style.display = "none";
 };
 
-
+// function to render the form to add new players
 const renderNewPlayerForm = () => {
     try {
         newPlayerFormContainer.innerHTML = `
@@ -121,15 +129,20 @@ const renderNewPlayerForm = () => {
                 <input type="text" name="breed" placeholder="Breed" required>
                 <button type="submit">Add Player</button>
             </form>`;
+            // event listener to handle form submission
         document.getElementById('newPlayerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            //player object from form data
             const playerObj = {
                 name: e.target.name.value,
                 breed: e.target.breed.value,
             };
+            // calls function to send new player data to api (name and breed only, status auto to bench)
+            await addNewPlayer(playerObj);
+            // after adding player clears the text field to be blank again
             e.target.name.value = '';
             e.target.breed.value = '';
-            await addNewPlayer(playerObj);
+            // re-render the players
             renderAllPlayers();
         });
     } catch (err) {

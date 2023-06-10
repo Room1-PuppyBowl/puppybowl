@@ -5,6 +5,10 @@
   color: #50403E;
 }
 
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Bookman, URW Bookman L, serif;
   line-height: 1.6;
@@ -32,6 +36,8 @@ body {
   border-radius: 15px;
   box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
+  font-family: 'Pacifico', cursive;
+  font-size: 23px;
 }
 
 .card button {
@@ -39,11 +45,13 @@ body {
   background: #EFEDC3;
   color: #333;
   border: none;
-  border-radius: 15px;
-  padding: 10px 20px;
-  margin-top: 10px;
+  border-radius: 20px;
+  padding: 10px;
+  margin: 5px;
   cursor: pointer;
   text-align: center;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
 .card button:hover {
@@ -64,35 +72,9 @@ body {
   border-radius: 5px; */
 }
 
-button {
-  display: inline-block;
-  color: #555;
-  background: #EFEDC3;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  margin: 5px;
-  border-radius: 30px;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.button:hover {
-  background: #035689;
-  transform: scale(1.1);
-}
-
 form {
   margin: 30px auto;
   text-align: center;
-}
-
-input[type="text"], input[type="number"] {
-  padding: 10px;
-  margin: 5px;
-  width: 200px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
 }
 
 .smol {
@@ -112,21 +94,14 @@ input[type="text"], input[type="number"] {
 }
 
 .smol-content {
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #f4f4f4;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 300px; */
   background: #CDB89B;
   margin: 20px;
-  width: 500px;
+  min-width: auto;
+  max-width: 20%;
+  max-height: 80%;
   box-shadow: 2px 3px 7px rgba(0, 0, 0, 0.15);
   border-radius: 15px;
-  padding: 15px;
+  padding: 30px;
   text-align: center;
   transition: 0.3s;
   position: absolute;
@@ -136,13 +111,53 @@ input[type="text"], input[type="number"] {
   z-index: 1;
 }
 
+.player-details {
+  max-width: 100%;
+}
+
+.player-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.smol-content p {
+  max-width: 100%;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.smol-content .player-details {
+  max-width: 100%;
+}
+.smol-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.smol-content h2 {
+  font-family: 'Pacifico', cursive;
+  font-weight: bold;
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.player-info {
+  background-color: #EFEDC3;
+  padding: 10px;
+  border-radius: 15px;
+  margin-top: 10px;
+  max-width: 100%;
+}
+
+.player-details-text {
+  font-weight: bold;
+}
+
 .close-button {
-  /* position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
-  font-size: 20px; */
-  display: inline-block;
   background: #EFEDC3;
   color: #333;
   border: none;
@@ -153,9 +168,87 @@ input[type="text"], input[type="number"] {
   position: absolute;
   top: 20px;
   right: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
 }
 
 .close-button:hover {
   background: #E39F7E;
   transform: scale(1.1);
+}
+
+#title-banner {
+  background-color: #CDB89B;
+  text-align: center;
+  padding: 20px 0;
+  margin-bottom: 20px;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 15px 15px;
+}
+
+#title-banner h1 {
+  font-family: 'Pacifico', cursive;
+  font-size: 2.5em;
+  color: #50403E;
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"], input[type="number"] {
+  background-color: #EFEDC3;
+  padding: 12px 20px;
+  margin: 5px;
+  font-size: 18px;
+  border: 2px solid #CDB89B;
+  border-radius: 5px;
+  color: #50403E;
+  font-weight: bold;
+  width: 275px;
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+  border-color: #E39F7E;
+  outline: none;
+}
+
+button[type="submit"] {
+  background-color: #EFEDC3;
+  padding: 12px 20px;
+  margin: 5px;
+  font-size: 18px;
+  border: 2px solid #CDB89B;
+  border-radius: 5px;
+  color: #50403E;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #E39F7E;
+  border-color: #E39F7E;
+  transform: scale(1.05);
+}
+
+button[type="submit"]:focus {
+  border-color: #E39F7E;
+  outline: none;
+}
+
+@media screen and (max-width: 768px) {
+  .smol-content {
+    max-width: 90%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .smol-content {
+    max-width: 95%;
+  }
+}
+
+@media screen and (max-width: 1800px) {
+  .smol-content {
+    max-width: 30%;
+    max-height: 100%;
+  }
 }

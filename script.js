@@ -4,7 +4,7 @@ const newPlayerFormContainer = document.getElementById('form-container');
 
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
 
-const cohortName = '2302-ACC-CTWEB-PT-B';
+const cohortName = '2302-ACC-CTWEB-PT-X';
 // Use the APIURL variable for fetch requests
 const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/players/`;
 
@@ -29,17 +29,43 @@ const fetchSinglePlayer = async (playerId) => {
     }
 };
 
+
 const addNewPlayer = async (playerObj) => {
     try {
-        const response = await fetch(APIURL + 'players', {
+        const response = await fetch(APIURL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(playerObj),
         });
+        
         const newPlayer = await response.json();
-        return newPlayer;
+        
+        // checks if the api response indicates success
+        if (newPlayer.success) {
+            // re-renders the player list to include the new player
+            renderAllPlayers();
+        } else {
+            console.error('Failed to add player:', newPlayer.error);
+        }
+        
     } catch (err) {
         console.error('Oops, something went wrong with adding that player!', err);
+    }
+};
+
+const removePlayer = async (playerId) => {
+    try {
+        const response = await fetch(`${APIURL}${playerId}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            renderAllPlayers();
+        } else {
+            console.error('Failed to delete player:'. response.statusText);
+        }
+    } catch (err) {
+        console.error(`Error removing player #${playerId} from the roster!`, err);
     }
 };
 
@@ -53,7 +79,7 @@ const renderAllPlayers = async () => {
                 <img src="${player.imageUrl}" alt="${player.name}" width="200">
                 <p>${player.name}</p>
                 <button onclick="displayPlayerDetails(${player.id})">See details</button>
-                <button onclick="removePlayer(${player.id}, ${JSON.stringify(player)})">Remove from roster</button>
+                <button onclick="removePlayer(${player.id})">Remove from Roster</button>
             </div>`;
         });
         playerContainer.innerHTML = playerContainerHTML;
@@ -62,16 +88,19 @@ const renderAllPlayers = async () => {
     }
 };
 
-
 const displayPlayerDetails = async (playerId) => {
     try {
         const player = await fetchSinglePlayer(playerId);
         const smolContent = document.getElementById('player-details');
         let playerDetailsHTML = `
-        <img src="${player.data.player.imageUrl}" alt="${player.data.player.name}" width="200">
-        <p>Name: ${player.data.player.name}</p>
-        <p>Breed: ${player.data.player.breed}</p>
-        <p>Status: ${player.data.player.status}</p>`;
+        <div class="player-image">
+            <img src="${player.data.player.imageUrl}" alt="${player.data.player.name}" width="200">
+        </div>
+        <div class="player-info">
+            <h2>${player.data.player.name}</h2>
+            <p>Breed: ${player.data.player.breed}</p>
+            <p>Status: ${player.data.player.status}</p>
+        </div>`;
         smolContent.innerHTML = playerDetailsHTML;
         document.getElementById('player-smol').style.display = "block";
     } catch (err) {
@@ -90,15 +119,16 @@ const renderNewPlayerForm = () => {
             <form id="newPlayerForm">
                 <input type="text" name="name" placeholder="Name" required>
                 <input type="text" name="breed" placeholder="Breed" required>
-                <input type="text" name="status" placeholder="Status" required>
                 <button type="submit">Add Player</button>
             </form>`;
         document.getElementById('newPlayerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const playerObj = {
                 name: e.target.name.value,
-                age: e.target.age.value,
+                breed: e.target.breed.value,
             };
+            e.target.name.value = '';
+            e.target.breed.value = '';
             await addNewPlayer(playerObj);
             renderAllPlayers();
         });

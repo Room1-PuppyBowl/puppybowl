@@ -234,21 +234,50 @@ button[type="submit"]:focus {
   outline: none;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1198px) {
   .smol-content {
-    max-width: 90%;
+    max-width: 45%;
+    max-height: 100%;
+    font-size: 15px;
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 1199px) {
   .smol-content {
-    max-width: 95%;
+    max-width: 40%;
+    max-height: 100%;
+    font-size: 15px;
   }
 }
 
-@media screen and (max-width: 1800px) {
+@media screen and (min-width: 1200px) and (max-width: 1499px) {
+  .smol-content {
+    max-width: 35%;
+    max-height: 100%;
+    font-size: 75%;
+  }
+}
+
+@media screen and (min-width: 1500px) and (max-width: 1949px) {
+  .smol-content {
+    max-width: 25%;
+    max-height: 100%;
+    font-size: 75%;
+  }
+}
+
+@media screen and (max-width: 1999px) and (min-width: 1950px) {
   .smol-content {
     max-width: 30%;
     max-height: 100%;
+    font-size: 15px;
+  }
+}
+
+@media screen and (min-width: 2000px) {
+  .smol-content {
+    max-width: 25%;
+    max-height: 100%;
+    font-size: 18px;
   }
 }

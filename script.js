@@ -1,5 +1,5 @@
 const playerContainer = document.getElementById('all-players-container');
-const newPlayerFormContainer = document.getElementById('new-player-form');
+
 
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
 const cohortName = '2302-acc-ct-web-pt-b';
@@ -27,87 +27,121 @@ const fetchSinglePlayer = async (playerId) => {
 };
 
 
-function createForm() {
-  const formContainer = document.getElementById("formContainer");
-
-  // Create the form element
-  const form = document.createElement("form");
-  form.id = "myForm";
-
-  // Create the form fields
-  const nameLabel = document.createElement("label");
-  nameLabel.textContent = "Name:";
-  const nameInput = document.createElement("input");
-  nameInput.type = "text";
-  nameInput.name = "name";
-  nameInput.required = true;
-
-const breedLabel = document.createElement("label");
-  breedLabel.textContent = "Name:";
-  const breedInput = document.createElement("input");
-  breedInput.type = "text";
-  breedInput.breed = "breed";
-  breedInput.required = true;
-
-  const imageLabel = document.createElement("label");
-  imageLabel.textContent = "Image URL:";
-  const imageInput = document.createElement("input");
-  imageInput.type = "text";
-  imageInput.name = "image";
-
-
-  const submitButton = document.createElement("input");
-  submitButton.type = "submit";
-  submitButton.value = "Submit";
-  submitButton.innerHTML = "Submit";
-
-  // Append the form fields to the form
-  form.appendChild(nameLabel);
-  form.appendChild(nameInput);
-  form.appendChild(breedLabel);
-  form.appendChild(breedInput);
-  form.appendChild(statusLabel);
-  form.appendChild(statusInput);
-  form.appendChild(imageLabel);
-  form.appendChild(imageInput);
-  form.appendChild(submitButton);
-
-  // Append the form to the form container
-  formContainer.appendChild(form);
-
-  // Add form submission event listener
-  form.addEventListener("submit", (event) => {
-    event.preventDefault(); // Prevent the default form submission
-
-    // Retrieve the entered values
-    const name = nameInput.value;
-    const email = emailInput.value;
-
-    // Perform any necessary form validation
-
-    // Process the entered data
-    // You can send the data to a server, perform some calculations, or display it on the page
-
-    // Optionally, reset the form after submission
-    form.reset();
-
-    // Remove the form from the form container
-    formContainer.removeChild(form);
-  });
-}
-
 
 const addNewPlayer = async (playerObj) => {
-    const playerDetailsElement = document.createElement("div");
-    playersDetailsElement.innerHTML = `
-    <
-    `
+  
     try {
 
     } catch (err) {
         console.error('Oops, something went wrong with adding that player!', err);
     }
 };
+
+// script.js
+function createForm() {
+    const formContainer = document.getElementById("new-player-form");
+  
+    // Create the form element
+    const form = document.createElement("form");
+    form.id = "newPlayerForm";
+  
+    // Create the form fields
+    const idLabel = document.createElement("label");
+    idLabel.textContent = "ID:";
+    const idInput = document.createElement("input");
+    idInput.type = "number";
+    idInput.name = "id";
+    idInput.required = true;
+  
+    const nameLabel = document.createElement("label");
+    nameLabel.textContent = "Name:";
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.name = "name";
+    nameInput.required = true;
+  
+    const breedLabel = document.createElement("label");
+    breedLabel.textContent = "Breed:";
+    const breedInput = document.createElement("input");
+    breedInput.type = "text";
+    breedInput.name = "breed";
+    breedInput.required = true;
+  
+    const statusLabel = document.createElement("label");
+    statusLabel.textContent = "Status:";
+    const statusInput = document.createElement("select");
+    statusInput.name = "status";
+    statusInput.required = true;
+  
+    // Create status options
+    const fieldOption = document.createElement("option");
+    fieldOption.value = "field";
+    fieldOption.textContent = "Field";
+    const benchOption = document.createElement("option");
+    benchOption.value = "bench";
+    benchOption.textContent = "Bench";
+  
+    // Append status options to select element
+    statusInput.appendChild(fieldOption);
+    statusInput.appendChild(benchOption);
+  
+    const imageLabel = document.createElement("label");
+    imageLabel.textContent = "Image URL:";
+    const imageInput = document.createElement("input");
+    imageInput.type = "text";
+    imageInput.name = "imageUrl";
+  
+    const submitButton = document.createElement("input");
+    submitButton.type = "submit";
+    submitButton.value = "Add Player";
+  
+    // Append the form fields to the form
+    form.appendChild(idLabel);
+    form.appendChild(idInput);
+    form.appendChild(nameLabel);
+    form.appendChild(nameInput);
+    form.appendChild(breedLabel);
+    form.appendChild(breedInput);
+    form.appendChild(statusLabel);
+    form.appendChild(statusInput);
+    form.appendChild(imageLabel);
+    form.appendChild(imageInput);
+    form.appendChild(submitButton);
+  
+    // Append the form to the form container
+    formContainer.appendChild(form);
+  
+    // Add form submission event listener
+    form.addEventListener("submit", (event) => {
+      event.preventDefault(); // Prevent the default form submission
+  
+      // Retrieve the entered values
+      const id = Number(idInput.value);
+      const name = nameInput.value;
+      const breed = breedInput.value;
+      const status = statusInput.value;
+      const imageUrl = imageInput.value;
+  
+      // Create the player object
+      const player = {
+        id: id,
+        name: name,
+        breed: breed,
+        status: status,
+        imageUrl: imageUrl
+      };
+  
+      // Display the player object
+      console.log(player);
+  
+      // Optionally, reset the form after submission
+      form.reset();
+    });
+  }
+  
+  // Call the createForm() function to create the form dynamically
+  createForm();
+  
 
 const removePlayer = async (playerId) => {
     try {

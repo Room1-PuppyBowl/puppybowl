@@ -38,6 +38,8 @@ const addNewPlayer = async (playerObj) => {
       if (response.ok) {
         const addedPlayer = await response.json();
         console.log("Player added:", addedPlayer);
+        //dialog box showing user success
+        alert(`Success! ${name} added successfully.`);
   
         // Perform any further actions with the added player, such as displaying it on the page
       } else {
@@ -140,9 +142,6 @@ function createForm() {
       // Display the player object
       console.log(player);
 
-      //dialog box showing user success
-      alert(`Success! ${name} added successfully.`);
-  
       // Optionally, reset the form after submission
       form.reset();
 

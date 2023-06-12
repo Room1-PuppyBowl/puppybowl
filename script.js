@@ -61,12 +61,7 @@ function createForm() {
     form.id = "newPlayerForm";
   
     // Create the form fields
-    const idLabel = document.createElement("label");
-    idLabel.textContent = "ID:";
-    const idInput = document.createElement("input");
-    idInput.type = "number";
-    idInput.name = "id";
-    idInput.required = true;
+
   
     const nameLabel = document.createElement("label");
     nameLabel.textContent = "Name:";
@@ -111,8 +106,7 @@ function createForm() {
     submitButton.value = "Add Player";
   
     // Append the form fields to the form
-    form.appendChild(idLabel);
-    form.appendChild(idInput);
+
     form.appendChild(nameLabel);
     form.appendChild(nameInput);
     form.appendChild(breedLabel);

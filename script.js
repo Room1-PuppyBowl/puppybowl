@@ -104,6 +104,7 @@ const renderSinglePlayers = async (playerId) => {
     const closeButton = playerContainer.querySelector(".close-button");
     closeButton.addEventListener("click", () => {
     playerContainer.remove();
+    window.location.reload();
     });
   } catch (err) {
     console.error(

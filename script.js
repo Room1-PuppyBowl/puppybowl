@@ -29,13 +29,28 @@ const fetchSinglePlayer = async (playerId) => {
 
 
 const addNewPlayer = async (playerObj) => {
-  
     try {
-
+      const response = await fetch(APIURL + "players", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(playerObj),
+      });
+  
+      if (response.ok) {
+        const addedPlayer = await response.json();
+        console.log("Player added:", addedPlayer);
+  
+        // Perform any further actions with the added player, such as displaying it on the page
+      } else {
+        console.error("Failed to add player");
+      }
+  
     } catch (err) {
-        console.error('Oops, something went wrong with adding that player!', err);
+      console.error("Oops, something went wrong with adding that player!", err);
     }
-};
+  };
 
 // script.js
 function createForm() {

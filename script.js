@@ -1,6 +1,3 @@
-const playerContainer = document.getElementById('all-players-container');
-
-
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
 const cohortName = '2302-acc-ct-web-pt-b';
 // Use the APIURL variable for fetch requests
@@ -84,12 +81,14 @@ function createForm() {
     statusInput.required = true;
   
     // Create status options
-    const fieldOption = document.createElement("option");
-    fieldOption.value = "field";
-    fieldOption.textContent = "Field";
     const benchOption = document.createElement("option");
     benchOption.value = "bench";
     benchOption.textContent = "Bench";
+    benchOption.selected = true;
+    const fieldOption = document.createElement("option");
+    fieldOption.value = "field";
+    fieldOption.textContent = "Field";
+
   
     // Append status options to select element
     statusInput.appendChild(fieldOption);
@@ -125,15 +124,13 @@ function createForm() {
       event.preventDefault(); // Prevent the default form submission
   
       // Retrieve the entered values
-      const id = Number(idInput.value);
       const name = nameInput.value;
       const breed = breedInput.value;
       const status = statusInput.value;
       const imageUrl = imageInput.value;
   
       // Create the player object
-      const player = {
-        id: id,
+      const player = {   
         name: name,
         breed: breed,
         status: status,

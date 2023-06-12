@@ -139,9 +139,15 @@ function createForm() {
   
       // Display the player object
       console.log(player);
+
+      //dialog box showing user success
+      alert(`Success! ${name} added successfully.`);
   
       // Optionally, reset the form after submission
       form.reset();
+
+      //Ensure status goes back to bench after submission
+      statusInput.value = "bench";
     });
   }
   

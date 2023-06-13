@@ -1,4 +1,4 @@
-// Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
+// Add your cohort name to the variable below, 
 const cohortName = '2302-acc-ct-web-pt-b';
 // Use the APIURL variable for fetch requests
 const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/`;
@@ -68,6 +68,7 @@ function createForm() {
     nameInput.type = "text";
     nameInput.name = "name";
     nameInput.required = true;
+    nameInput.autocomplete = "name";
   
     const breedLabel = document.createElement("label");
     breedLabel.textContent = "Breed:";
@@ -110,14 +111,18 @@ function createForm() {
 
     form.appendChild(nameLabel);
     form.appendChild(nameInput);
+    nameLabel.appendChild(nameInput);
     form.appendChild(breedLabel);
     form.appendChild(breedInput);
+    breedLabel.appendChild(breedInput);
     form.appendChild(statusLabel);
     form.appendChild(statusInput);
+    statusLabel.appendChild(statusInput);
     form.appendChild(imageLabel);
     form.appendChild(imageInput);
+    imageLabel.appendChild(imageInput);
     form.appendChild(submitButton);
-  
+      
     // Append the form to the form container
     formContainer.appendChild(form);
   

@@ -1,156 +1,238 @@
-const playerContainer = document.getElementById('roster-container');
-const newPlayerFormContainer = document.getElementById('form-container');
-
+const playerContainer = document.getElementById('all-players-container');
+const newPlayerFormContainer = document.getElementById('new-player-form');
 
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
-
 const cohortName = '2302-ACC-CT-WEB-PT-B';
 // Use the APIURL variable for fetch requests
-const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/players/`;
+const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/`;
 
-//function to fetch all players from api
+
+/**
+ * It fetches all players from the API and returns them
+ * @returns An array of objects.
+ */
 const fetchAllPlayers = async () => {
     try {
-        const response = await fetch(APIURL);
-        const data = await response.json();
-        return data;
+
+        const response = await fetch(`${APIURL}players/`);
+        const fetchData = await response.json();
+
+        return fetchData.data.players;
+        
     } catch (err) {
         console.error('Uh oh, trouble fetching players!', err);
     }
 };
 
-//function to fetch a single player from the api by its id
 const fetchSinglePlayer = async (playerId) => {
     try {
-        const response = await fetch(`${APIURL}${playerId}`);
-        const player = await response.json();
-        console.log(player);
-        return player;
+
+        const response = await fetch(`${APIURL}players/${playerId}`);
+        const dataSinglePlayer = await response.json();
+
+        return dataSinglePlayer;
+
     } catch (err) {
         console.error(`Oh no, trouble fetching player #${playerId}!`, err);
     }
 };
 
-//function to add a new player using the api
 const addNewPlayer = async (playerObj) => {
     try {
-        const response = await fetch(APIURL, {
+    
+        const response = await fetch(`${APIURL}players/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(playerObj),
-        });
+            headers: {"Content-Type": "application/json"},
+    });
+
         
-        const newPlayer = await response.json();
-        
-        // checks if the api response indicates success
-        if (newPlayer.success) {
-            // re-renders the player list to include the new player
-            renderAllPlayers();
-        } else {
-            console.error('Failed to add player:', newPlayer.error);
-        }
-        
+        const addPlayer = await response.json();
+        await fetchAllPlayers();
+        return addPlayer;
+
     } catch (err) {
         console.error('Oops, something went wrong with adding that player!', err);
     }
 };
 
-//function to remove a player via the api
 const removePlayer = async (playerId) => {
     try {
-        const response = await fetch(`${APIURL}${playerId}`, {
+
+        const response = await fetch(`${APIURL}players/${playerId}`, {
             method: 'DELETE',
         });
+
+        const reFenderPlayers = await response.json();
+
         
-        const reFenderPlayers = await fetchAllPlayers();
         renderAllPlayers(reFenderPlayers);
 
+
     } catch (err) {
-        console.error(`Error removing player #${playerId} from the roster!`, err);
+        console.error(
+            `Whoops, trouble removing player #${playerId} from the roster!`,
+            err
+        );
     }
 };
 
-//function to render all players to the dom
+/**
+ * It takes an array of player objects, loops through them, and creates a string of HTML for each
+ * player, then adds that string to a larger string of HTML that represents all the players. 
+ * 
+ * Then it takes that larger string of HTML and adds it to the DOM. 
+ * 
+ * It also adds event listeners to the buttons in each player card. 
+ * 
+ * The event listeners are for the "See details" and "Remove from roster" buttons. 
+ * 
+ * The "See details" button calls the `fetchSinglePlayer` function, which makes a fetch request to the
+ * API to get the details for a single player. 
+ * 
+ * The "Remove from roster" button calls the `removePlayer` function, which makes a fetch request to
+ * the API to remove a player from the roster. 
+ * 
+ * The `fetchSinglePlayer` and `removePlayer` functions are defined in the
+ * @param playerList - an array of player objects
+ * @returns the playerContainerHTML variable.
+ */
 const renderAllPlayers = async () => {
     try {
-        const players = await fetchAllPlayers();
-        let playerContainerHTML = '';
-        // loop through all players and create a new div for each
-        players.data.players.forEach(player => {
-            playerContainerHTML += `
-            <div class="card">
-                <img src="${player.imageUrl}" alt="${player.name}" width="200">
-                <p>${player.name}</p>
-                <button onclick="displayPlayerDetails(${player.id})">See details</button>
-                <button onclick="removePlayer(${player.id})">Remove from Roster</button>
-            </div>`;
+
+        const renderPlayers = await fetchAllPlayers();
+
+        console.log("Data: ", renderPlayers)
+        renderPlayers.forEach((player) => {
+            
+            const newPlayerCard = renderSinglePlayer(player);
+            playerContainer.appendChild(newPlayerCard);
+            
+
         });
-        playerContainer.innerHTML = playerContainerHTML;
+        
     } catch (err) {
         console.error('Uh oh, trouble rendering players!', err);
     }
 };
 
-// function to display details of a player
-const displayPlayerDetails = async (playerId) => {
-    try {
-        const player = await fetchSinglePlayer(playerId);
-        const smolContent = document.getElementById('player-details');
-        // two divs for image and info to fix media screen scaling issues and display player details
-        let playerDetailsHTML = `
-        <div class="player-image">
-            <img src="${player.data.player.imageUrl}" alt="${player.data.player.name}" width="200">
-        </div>
-        <div class="player-info">
-            <h2>${player.data.player.name}</h2>
-            <p>Breed: ${player.data.player.breed}</p>
-            <p>Status: ${player.data.player.status}</p>
-        </div>`;
-        smolContent.innerHTML = playerDetailsHTML;
-        document.getElementById('player-smol').style.display = "block";
-    } catch (err) {
-        console.error(`Uh oh, trouble fetching and displaying player #${playerId} details!`, err);
-    }
-};
+const renderSinglePlayer = (player) => {
+    // create the card with class and append do container
+    const newPlayerCard = document.createElement("div");
+    newPlayerCard.id = player.id;
+    newPlayerCard.className = "player-card"
+    playerContainer.appendChild(newPlayerCard);
+  
+    // create the h1 for name and append to card
+    const newPlayerName = document.createElement("h1");
+    newPlayerCard.appendChild(newPlayerName);
+    newPlayerName.innerHTML = player.name
+  
+    // create the img for image and append to card
+    const newPlayerImage = document.createElement("img");
+    newPlayerImage.className = "player-image";
+    newPlayerCard.appendChild(newPlayerImage);
+    newPlayerImage.src = player.imageUrl;
+  
+    // create the show details button and append to card
+    const showDetailsButton = document.createElement("button");
+    newPlayerCard.appendChild(showDetailsButton);
+  
+    showDetailsButton.addEventListener(("click"), () => {
+      const moreDetails = renderMoreDetails(player);
+      newPlayerCard.appendChild(moreDetails);
+    });
+  
+    showDetailsButton.innerHTML = "Show Details";
+  
+    // create the delete button and append to card
+    const deleteButton = document.createElement("button");
+    
+    newPlayerCard.appendChild(deleteButton);
+  
+    deleteButton.innerHTML = "Delete";
+  
+    deleteButton.addEventListener(("click"), async () => {
+      await removePlayer(player.id);
+      // remove element from DOM
+      const deleted = document.getElementById(player.id)
+      deleted.remove();
+    });
+  
+    return newPlayerCard;
+  }
 
-// to close the see player details view by hiding the container
-const closeSmol = () => {
-    document.getElementById('player-smol').style.display = "none";
-};
 
-// function to render the form to add new players
+  const renderMoreDetails = (player) => {
+    const breed = player.breed;
+    const status = player.status;
+  
+    const playerDetailsElement = document.createElement("div");
+    playerDetailsElement.className = "detail";
+  
+    const playerDetailList = document.createElement("ul");
+    playerDetailsElement.appendChild(playerDetailList);
+  
+    const breedElement = document.createElement("li");
+    breedElement.innerHTML = `Breed: ${breed}`;
+    playerDetailList.appendChild(breedElement);
+  
+    const statusElement = document.createElement("li");
+    statusElement.innerHTML =  `Status: ${status}`;
+    playerDetailList.appendChild(statusElement)
+  
+    return playerDetailsElement;
+  }
+/**
+ * It renders a form to the DOM, and when the form is submitted, it adds a new player to the database,
+ * fetches all players from the database, and renders them to the DOM.
+ */
 const renderNewPlayerForm = () => {
     try {
-        newPlayerFormContainer.innerHTML = `
-            <form id="newPlayerForm">
-                <input type="text" name="name" placeholder="Name" required>
-                <input type="text" name="breed" placeholder="Breed" required>
-                <button type="submit">Add Player</button>
-            </form>`;
-            // event listener to handle form submission
-        document.getElementById('newPlayerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            //player object from form data
-            const playerObj = {
-                name: e.target.name.value,
-                breed: e.target.breed.value,
+        const form = document.createElement("div");
+        form.innerHTML = `
+        <form>
+          <label for="name">Name:</label><br>
+          <input type="text" id="name" name="name"><br>
+          <label for="breed">Breed:</label><br>
+          <input type="text" id="breed" name="breed"><br>
+          <button type="submit" id="submit">Submit</button>
+        </form>
+        `;
+        newPlayerFormContainer.appendChild(form);
+      
+
+
+        submit.addEventListener(("click"), async (event) => {
+            event.preventDefault();
+
+            const nameInput = document.getElementById('name');
+            const breedInput = document.getElementById('breed');
+
+        
+            const newPlayer = {
+              name: nameInput.value,
+              breed: breedInput.value,
+
             };
-            // calls function to send new player data to api (name and breed only, status auto to bench)
-            await addNewPlayer(playerObj);
-            // after adding player clears the text field to be blank again
-            e.target.name.value = '';
-            e.target.breed.value = '';
-            // re-render the players
-            renderAllPlayers();
+
+            await addNewPlayer(newPlayer);
+
+            await renderAllPlayers();
         });
+
+        
+
     } catch (err) {
         console.error('Uh oh, trouble rendering the new player form!', err);
     }
-};
+}
 
 const init = async () => {
-    renderAllPlayers();
+    const players = await fetchAllPlayers();
+    renderAllPlayers(players);
+
     renderNewPlayerForm();
-};
+}
 
 init();

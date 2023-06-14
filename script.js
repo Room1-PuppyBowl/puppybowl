@@ -4,7 +4,7 @@ const newPlayerFormContainer = document.getElementById('form-container');
 
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
 
-const cohortName = '2302-ACC-CTWEB-PT-X';
+const cohortName = '2302-ACC-CT-WEB-PT-X';
 // Use the APIURL variable for fetch requests
 const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/players/`;
 

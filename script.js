@@ -1,22 +1,22 @@
-const playerContainer = document.getElementById('roster-container');
-const newPlayerFormContainer = document.getElementById('form-container');
-
+const playerContainer = document.getElementById("roster-container");
+const newPlayerFormContainer = document.getElementById("form-container");
 
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
 
 const cohortName = '2302-ACC-CT-WEB-PT-X';
+const cohortName = "2302-ACC-CTWEB-PT-X";
 // Use the APIURL variable for fetch requests
 const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/players/`;
 
 //function to fetch all players from api
 const fetchAllPlayers = async () => {
-    try {
-        const response = await fetch(APIURL);
-        const data = await response.json();
-        return data;
-    } catch (err) {
-        console.error('Uh oh, trouble fetching players!', err);
-    }
+  try {
+    const response = await fetch(APIURL);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Uh oh, trouble fetching players!", err);
+  }
 };
 
 //function to fetch a single player from the api by its id
@@ -57,6 +57,7 @@ const addNewPlayer = async (playerObj) => {
 
 //function to remove a player via the api
 const removePlayer = async (playerId) => {
+
     try {
         const response = await fetch(`${APIURL}${playerId}`, {
             method: 'DELETE',
@@ -74,6 +75,7 @@ const removePlayer = async (playerId) => {
 
 //function to render all players to the dom
 const renderAllPlayers = async () => {
+
     try {
         const players = await fetchAllPlayers();
         let playerContainerHTML = '';
@@ -86,11 +88,18 @@ const renderAllPlayers = async () => {
                 <button onclick="displayPlayerDetails(${player.id})">See details</button>
                 <button onclick="removePlayer(${player.id})">Remove from Roster</button>
             </div>`;
-        });
-        playerContainer.innerHTML = playerContainerHTML;
-    } catch (err) {
-        console.error('Uh oh, trouble rendering players!', err);
-    }
+    });
+    playerContainer.innerHTML = playerContainerHTML;
+    const detailsButtons = playerContainer.querySelectorAll(".details-button");
+    detailsButtons.forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        const playerId = event.target.dataset.playerId;
+        await renderSinglePlayers(playerId);
+      });
+    });
+  } catch (err) {
+    console.error("Uh oh, trouble rendering players!", err);
+  }
 };
 
 // function to display details of a player
@@ -122,8 +131,8 @@ const closeSmol = () => {
 
 // function to render the form to add new players
 const renderNewPlayerForm = () => {
-    try {
-        newPlayerFormContainer.innerHTML = `
+  try {
+    newPlayerFormContainer.innerHTML = `
             <form id="newPlayerForm">
                 <input type="text" name="name" placeholder="Name" required>
                 <input type="text" name="breed" placeholder="Breed" required>
@@ -151,8 +160,8 @@ const renderNewPlayerForm = () => {
 };
 
 const init = async () => {
-    renderAllPlayers();
-    renderNewPlayerForm();
+  renderAllPlayers();
+  renderNewPlayerForm();
 };
 
 init();

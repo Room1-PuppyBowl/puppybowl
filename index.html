@@ -4,19 +4,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <!-- Keep this in the head section -->
-<script defer src="script.js"></script>
-
+    <script defer src="script.js"></script>
     <title>Puppy Bowl</title>
 </head>
 <body>
+    <div id="title-banner">
+        <h1>Annual Puppy Bowl!</h1>
+    </div>
     <div id="form-container">
         <!-- The form will be appended here by JavaScript -->
     </div>
     <div id="roster-container">
         <!-- The roster will be appended here by JavaScript -->
     </div>
-    <script type="module" src="main.js"></script>
+    <div id="player-smol" class="smol">
+        <div class="smol-content">
+            <span class="close-button" onclick="closeSmol()">&times;</span>
+            <div id="player-details"></div>
+        </div>
+    </div>
+    
+    <script type="module" src="script.js"></script>
 </body>
 </html>
